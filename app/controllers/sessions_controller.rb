@@ -31,8 +31,10 @@ class SessionsController < ApplicationController
 
 		if session && BCrypt::Password.new(session.refresh_token_digest) == refresh_token
 			user = session.identity.user 
+			jti = SecureRandom.uuid
 			payload = {
 				sub: user.id,
+				jti: jti,
 				exp: 30.minutes.from_now.to_i 
 				iat: Time.current.to_i
 			}
@@ -40,7 +42,7 @@ class SessionsController < ApplicationController
 			new_access_token = JWT.encode(payload, Rails.application.credentials.secret_key_base, 'HS256')
 			new_refresh_token = SecureRandom.hex(32)
 
-			session.update!(refresh_token_digest: BCrypt::Password.create(new_refresh_token))
+			session.update!(refresh_token_digest: BCrypt::Password.create(new_refresh_token), access_token_identifier: jti)
 
 			render json: {access_token: new_access_token, refresh_token: new_refresh_token}
 		else 
