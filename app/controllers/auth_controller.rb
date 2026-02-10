@@ -41,7 +41,7 @@ class AuthController < ApplicationController
     private
 
     def user_params
-        params.require(:user).permit(:username, :email, :role, :timezone)
+        params.require(:user).permit(:username, :email, :role, :timezone, :description)
     end
 
     def render_session_tokens(identity, status: :ok)

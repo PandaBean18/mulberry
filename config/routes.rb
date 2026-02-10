@@ -16,4 +16,10 @@ Rails.application.routes.draw do
     delete 'logout', to: 'auth#logout'
     post 'refresh', to: 'session#refresh'
   end
+
+  resources :discoveries, only: [] do 
+    collection do 
+      post :search_creators
+    end
+  end
 end

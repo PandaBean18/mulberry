@@ -118,6 +118,9 @@ GEM
     image_processing (1.14.0)
       mini_magick (>= 4.9.5, < 6)
       ruby-vips (>= 2.0.17, < 3)
+    informers (1.2.1)
+      onnxruntime (>= 0.9)
+      tokenizers (>= 0.5.3)
     io-console (0.8.2)
     irb (1.16.0)
       pp (>= 0.6.0)
@@ -156,6 +159,8 @@ GEM
     minitest (6.0.1)
       prism (~> 1.5)
     msgpack (1.8.0)
+    neighbor (0.6.0)
+      activerecord (>= 7.1)
     net-imap (0.6.2)
       date
       net-protocol
@@ -183,6 +188,12 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.0-x86_64-linux-musl)
       racc (~> 1.4)
+    onnxruntime (0.10.1)
+      ffi
+    onnxruntime (0.10.1-aarch64-linux)
+      ffi
+    onnxruntime (0.10.1-x86_64-linux)
+      ffi
     ostruct (0.6.3)
     parallel (1.27.0)
     parser (3.3.10.1)
@@ -193,6 +204,7 @@ GEM
     pg (1.6.3-aarch64-linux-musl)
     pg (1.6.3-x86_64-linux)
     pg (1.6.3-x86_64-linux-musl)
+    pgvector (0.3.2)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -244,6 +256,9 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.3.1)
+    rake-compiler-dock (1.11.0)
+    rb_sys (0.9.124)
+      rake-compiler-dock (= 1.11.0)
     rdoc (7.1.0)
       erb
       psych (>= 4.0.0)
@@ -313,6 +328,12 @@ GEM
     thruster (0.1.18-aarch64-linux)
     thruster (0.1.18-x86_64-linux)
     timeout (0.6.0)
+    tokenizers (0.6.3)
+      rb_sys
+    tokenizers (0.6.3-aarch64-linux)
+    tokenizers (0.6.3-aarch64-linux-musl)
+    tokenizers (0.6.3-x86_64-linux)
+    tokenizers (0.6.3-x86_64-linux-musl)
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -344,9 +365,12 @@ DEPENDENCIES
   bundler-audit
   debug
   image_processing (~> 1.2)
+  informers
   jwt
   kamal
+  neighbor
   pg (~> 1.1)
+  pgvector
   puma (>= 5.0)
   rails (~> 8.1.2)
   rubocop-rails-omakase
