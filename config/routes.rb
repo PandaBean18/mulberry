@@ -10,4 +10,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  scope :auth do 
+    post 'signup', to: 'auth#signup'
+    post 'login', to: 'auth#login'
+    delete 'logout', to: 'auth#logout'
+    post 'refresh', to: 'session#refresh'
+  end
 end

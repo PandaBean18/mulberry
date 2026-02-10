@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
 			payload = {
 				sub: user.id,
 				jti: jti,
-				exp: 30.minutes.from_now.to_i 
+				exp: 30.minutes.from_now.to_i,
 				iat: Time.current.to_i
 			}
 
