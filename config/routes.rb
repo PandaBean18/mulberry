@@ -22,4 +22,11 @@ Rails.application.routes.draw do
       post :search_creators
     end
   end
+
+  resources :media, only: [] do
+    collection do
+      get :signature       
+      post :confirm_upload 
+    end
+  end
 end
