@@ -5,9 +5,10 @@ class MediaController < AuthenticatedController
     folder = "portfolio/#{@current_user.id}"
     
     params_to_sign = { 
-      timestamp: timestamp, 
       folder: folder,
-      tags: "user_id_#{@current_user.id},portfolio"
+      source: "uw",
+      tags: "user_id_#{@current_user.id},portfolio",
+      timestamp: timestamp, 
     }
     
     signature = Cloudinary::Utils.api_sign_request(
@@ -26,7 +27,7 @@ class MediaController < AuthenticatedController
   end
 
   def confirm_upload
-    media_item = current_user.media_items.create!(
+    media_item = @current_user.media_items.create!(
       cloudinary_public_id: params[:public_id],
       media_type: params[:resource_type] == "video" ? :video : :image,
       metadata: params[:metadata] # dimensions, format, etc.

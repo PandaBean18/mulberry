@@ -1,6 +1,5 @@
 class SessionsController < ApplicationController
   before_action :set_session, only: %i[ show update destroy ]
-  scope :active, -> { where(revoked_at: nil).where("expires_at > ?", Time.current) }
 
   # GET /sessions
   def index

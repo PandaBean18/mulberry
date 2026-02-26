@@ -1,6 +1,7 @@
 class User < ApplicationRecord
     enum :role, {creator: "creator", sponsor: "sponsor"}
     has_many :identities, dependent: :destroy
+    has_many :sessions, through: :identities
     has_one :embedding, dependent: :destroy 
     has_many :media_items, dependent: :destroy
     after_commit :generate_description_embedding, on: :create, if: :creator?

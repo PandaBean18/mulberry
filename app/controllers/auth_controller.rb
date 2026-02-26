@@ -81,7 +81,7 @@ class AuthController < ApplicationController
             decoded_token = JWT.decode(token, Rails.application.credentials.secret_key_base, true, {algorithm: "HS256"})
             @auth_payload = decoded_token.first 
 
-            @current_user = User.find_by(id: payload['sub'])
+            @current_user = User.find_by(id: @auth_payload['sub'])
 
             if (@current_user == nil)
                 return render json: {error: "User not found"}, status: :unauthorized
