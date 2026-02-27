@@ -14,3 +14,15 @@
 #       methods: [:get, :post, :put, :patch, :delete, :options, :head]
 #   end
 # end
+
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins "http://localhost:5173" # Update this to match your frontend URL/port
+
+    resource "*",
+      headers: :any,
+      methods: [:get, :post, :put, :patch, :delete, :options, :head], # Ensure :options is here
+      expose: ['Authorization'], # Allow frontend to read the Auth header if needed
+      credentials: true
+  end
+end

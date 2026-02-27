@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_23_120537) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_26_141632) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -44,6 +44,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_23_120537) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "creator_id", null: false
+    t.uuid "sponsor_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id", "sponsor_id"], name: "index_conversations_on_creator_id_and_sponsor_id", unique: true
+    t.index ["creator_id"], name: "index_conversations_on_creator_id"
+    t.index ["sponsor_id"], name: "index_conversations_on_sponsor_id"
+  end
+
   create_table "embeddings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.vector "description_embedding", limit: 384
@@ -74,6 +84,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_23_120537) do
     t.index ["user_id"], name: "index_media_items_on_user_id"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.uuid "conversation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "read_at"
+    t.uuid "sender_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "access_token_identifier", null: false
     t.datetime "created_at", null: false
@@ -100,8 +121,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_23_120537) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "conversations", "users", column: "creator_id"
+  add_foreign_key "conversations", "users", column: "sponsor_id"
   add_foreign_key "embeddings", "users"
   add_foreign_key "identities", "users"
   add_foreign_key "media_items", "users"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "sessions", "identities"
 end

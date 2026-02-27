@@ -17,6 +17,10 @@ Rails.application.routes.draw do
     post 'refresh', to: 'sessions#refresh'
   end
 
+  resources :conversations, only: [:create, :index, :show] do
+    resources :messages, only: [:create, :index]
+  end
+
   resources :discoveries, only: [] do 
     collection do 
       post :search_creators
