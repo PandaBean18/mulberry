@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_054050) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_28_084616) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -42,6 +42,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_054050) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "campaign_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "campaign_id", null: false
+    t.uuid "conversation_id", null: false
+    t.datetime "created_at", null: false
+    t.uuid "creator_id", null: false
+    t.decimal "offered_rate", precision: 10, scale: 2
+    t.string "status", default: "invited", null: false
+    t.datetime "updated_at", null: false
+    t.index ["campaign_id", "creator_id"], name: "index_campaign_participants_on_campaign_id_and_creator_id", unique: true
+    t.index ["campaign_id"], name: "index_campaign_participants_on_campaign_id"
+    t.index ["conversation_id"], name: "index_campaign_participants_on_conversation_id"
+    t.index ["creator_id"], name: "index_campaign_participants_on_creator_id"
+    t.index ["status"], name: "index_campaign_participants_on_status"
+  end
+
+  create_table "campaigns", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "brief", null: false
+    t.decimal "budget_total", precision: 10, scale: 2, default: "0.0"
+    t.datetime "created_at", null: false
+    t.uuid "sponsor_id", null: false
+    t.string "status", default: "draft", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sponsor_id"], name: "index_campaigns_on_sponsor_id"
+    t.index ["status"], name: "index_campaigns_on_status"
   end
 
   create_table "conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -122,6 +149,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_054050) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "campaign_participants", "campaigns"
+  add_foreign_key "campaign_participants", "conversations"
+  add_foreign_key "campaign_participants", "users", column: "creator_id"
+  add_foreign_key "campaigns", "users", column: "sponsor_id"
   add_foreign_key "conversations", "users", column: "creator_id"
   add_foreign_key "conversations", "users", column: "sponsor_id"
   add_foreign_key "identities", "users"

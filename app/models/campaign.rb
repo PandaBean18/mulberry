@@ -1,6 +1,8 @@
 class Campaign < ApplicationRecord
     belongs_to :sponsor, class_name: 'User'
     has_one :embedding, as: :owner, dependent: :destroy
+    has_many :campaign_participants, dependent: :destroy
+    has_many :creators, through: :campaign_participants
 
     validates :title, :brief, presence: true
     validates :budget_total, numericality: { greater_than_or_equal_to: 0 }
