@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_112452) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_28_152333) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -81,6 +81,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_112452) do
     t.index ["creator_id", "sponsor_id"], name: "index_conversations_on_creator_id_and_sponsor_id", unique: true
     t.index ["creator_id"], name: "index_conversations_on_creator_id"
     t.index ["sponsor_id"], name: "index_conversations_on_sponsor_id"
+  end
+
+  create_table "deliverables", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "campaign_participant_id", null: false
+    t.datetime "created_at", null: false
+    t.string "deliverable_type", null: false
+    t.string "feedback"
+    t.string "status", default: "pending", null: false
+    t.string "submission_proof_url"
+    t.datetime "updated_at", null: false
+    t.index ["campaign_participant_id"], name: "index_deliverables_on_campaign_participant_id"
   end
 
   create_table "embeddings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -158,6 +169,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_112452) do
   add_foreign_key "conversations", "campaigns"
   add_foreign_key "conversations", "users", column: "creator_id"
   add_foreign_key "conversations", "users", column: "sponsor_id"
+  add_foreign_key "deliverables", "campaign_participants"
   add_foreign_key "identities", "users"
   add_foreign_key "media_items", "users"
   add_foreign_key "messages", "conversations"

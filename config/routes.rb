@@ -41,4 +41,12 @@ Rails.application.routes.draw do
       post :onboard
     end
   end
+
+  resources :deliverables, only: [:create] do
+    member do
+      patch :submit
+      patch :approve
+      patch :reject
+    end
+  end
 end

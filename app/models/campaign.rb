@@ -4,6 +4,7 @@ class Campaign < ApplicationRecord
     has_many :campaign_participants, dependent: :destroy
     has_many :creators, through: :campaign_participants
     has_many :conversations, dependent: :nullify
+    has_many :deliverables, through: :campaign_participants
 
     validates :title, :brief, presence: true
     validates :budget_total, numericality: { greater_than_or_equal_to: 0 }

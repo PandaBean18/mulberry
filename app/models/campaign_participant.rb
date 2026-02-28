@@ -2,6 +2,8 @@ class CampaignParticipant < ApplicationRecord
     belongs_to :campaign
     belongs_to :creator, class_name: "User"
     belongs_to :conversation
+    has_many :deliverables, dependent: :destroy
+    
     
     STATUSES = %w[invited accepted rejected completed].freeze
 
