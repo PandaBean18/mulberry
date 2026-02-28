@@ -19,9 +19,12 @@
 
 
 #test sponsor acc
-ACCESS_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMGY4YWIzYi02ZDkyLTQ1NjgtYTc5MC00MjdmZGQxNzEyMzUiLCJqdGkiOiI3MWYwYjJlYi01OWU4LTQwZDEtOGZjOC02MWZiMzc1Mjk0M2IiLCJleHAiOjE3NzIxNzQxODIsImlhdCI6MTc3MjE3MjM4Mn0.A2_FhKucgYytAAiW0M2BZP863RkFPumq7MCv3Zth-4M
-REFRESH_TOKEN=25b6956b082e89db05f9eb2ec3e9b66a8995e481b8709d7f3ff968b27a8888f4
-JTI=71f0b2eb-59e8-40d1-8fc8-61fb3752943b
+ACCESS_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMGY4YWIzYi02ZDkyLTQ1NjgtYTc5MC00MjdmZGQxNzEyMzUiLCJqdGkiOiJmZmQzM2RlMS1iYmYwLTQyMTAtYTcyMy05ZDMxZDZhMDliM2YiLCJleHAiOjE3NzIyODU4MzMsImlhdCI6MTc3MjI4NDAzM30.viToyqIDfzXiwqYlsPQ8arjU0IZjNG4z5Gw_xSBqrqQ
+REFRESH_TOKEN=d38b426122f2bf2459f2384a0ec99b929493c01eda39b428576e0842ce2f4872
+JTI=ffd33de1-bbf0-4210-a723-9d31d6a09b3f
+
+# test campaign 
+CAMPAIGN_ID=ad863bb9-790b-49ca-964d-7b50ca75dd16
 
 function logout() {
     curl -X DELETE http://127.0.0.1:3000/auth/logout \
@@ -78,13 +81,60 @@ function confirm() {
          }"
 }
 
+function createCampaign() {
+  curl -X POST http://localhost:3000/campaigns \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer $ACCESS_TOKEN" \
+     -d '{
+       "campaign": {
+         "title": "Gaming Headphone review",
+         "brief": "Looking for high energy creators to review our new gaming headphones with amazing sound quality",
+         "budget_total": 25000.00,
+         "status": "draft"
+       }
+     }'
+}
+
+function showCampaign() {
+  curl -X GET http://localhost:3000/campaigns/$1 \
+     -H "Authorization: Bearer $ACCESS_TOKEN" \
+     -H "Content-Type: application/json"
+}
+
+function campaignMatches() {
+  curl -X GET http://localhost:3000/campaigns/$1/matches \
+     -H "Authorization: Bearer $ACCESS_TOKEN" \
+     -H "Content-Type: application/json"
+}
+
+function inviteCreators() {
+  curl -X POST http://localhost:3000/campaigns/$1/invite \
+     -H "Authorization: Bearer $ACCESS_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "creator_ids": [
+         "2d611ed4-a0b2-4417-890e-2f9ea2c9b1b3",
+         "e8552373-34a2-40b1-950a-dcfbae8f7a0c",
+         "ce593558-b390-48ab-96b3-87f83e865194",
+         "a523a48d-203b-40d2-9e12-0c15e88073a0"
+       ]
+     }'
+}
+
 if [ $1 = "refresh" ]; then
   refresh
 elif [ $1 = "sign" ]; then 
   getSignature
-
 elif [ $1 = "upload" ]; then
   upload $2 $3 $4 $5 $6 $7 $8
 elif [ $1 = "confirm" ]; then 
   confirm $2 $3 $4 $5
+elif [ $1 = "createCampaign" ]; then
+  createCampaign
+elif [ $1 = "showCampaign" ]; then 
+  showCampaign $2
+elif [ $1 = "campaignMatches" ]; then 
+  campaignMatches $2
+elif [ $1 = "inviteCreators" ]; then 
+  inviteCreators $2
 fi

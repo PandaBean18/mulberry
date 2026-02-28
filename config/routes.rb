@@ -33,4 +33,12 @@ Rails.application.routes.draw do
       post :confirm_upload 
     end
   end
+
+  resources :campaigns do
+    member do
+      get :matches
+      post :invite
+      post :onboard
+    end
+  end
 end

@@ -18,7 +18,7 @@ class GenerateEmbeddingJob < ApplicationJob
 
         Embedding.upsert({
             owner_id: owner_id,
-            owner_type: owner_type
+            owner_type: owner_type,
             description_embedding: vector, 
             updated_at: Time.current
         }, unique_by: [:owner_type, :owner_id])

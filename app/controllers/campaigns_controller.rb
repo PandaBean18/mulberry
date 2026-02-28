@@ -1,4 +1,4 @@
-class CampaignController < AuthenticatedController
+class CampaignsController < AuthenticatedController
     before_action :set_campaign, only: [:show, :update, :matches, :invite, :onboard]
 
     def index
@@ -45,12 +45,10 @@ class CampaignController < AuthenticatedController
         creator_ids = params[:creator_ids]
 
         participants = creator_ids.map do |c_id|
-            {campaign_id: @campaign.id, creator_id: c_id, status: 'invited'}
+            InviteCreatorJob.perform_later(c_id, @campaign.id, @current_user.id)
         end
 
-        CampaignParticipant.upsert_all(participants, unique_by: [:campaign_id, :creator_id])
-
-        render json: {message: "Invites sent successfully"}, status: :ok
+        render json: {message: "Invites being sent"}, status: :ok
     end
 
     def onboard
@@ -64,7 +62,7 @@ class CampaignController < AuthenticatedController
     private
 
     def set_campaign
-        @campaign = current_user.campaigns.find(params[:id])
+        @campaign = @current_user.campaigns.find(params[:id])
     end
 
     def campaign_params

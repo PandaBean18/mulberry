@@ -9,7 +9,7 @@ class Campaign < ApplicationRecord
     validates :budget_total, numericality: { greater_than_or_equal_to: 0 }
     validates :status, inclusion: { in: %w[draft active completed cancelled] } 
 
-    after_save :generate_vector_embedding, if: :save_change_to_brief?
+    after_save :generate_vector_embedding, if: :saved_change_to_brief?
 
     private 
 
