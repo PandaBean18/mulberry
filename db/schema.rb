@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_26_141632) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_28_054050) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -57,9 +57,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_26_141632) do
   create_table "embeddings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.vector "description_embedding", limit: 384
+    t.uuid "owner_id", null: false
+    t.string "owner_type", default: "User", null: false
     t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["user_id"], name: "index_embeddings_on_user_id", unique: true
+    t.index ["owner_type", "owner_id"], name: "index_embeddings_on_owner_type_and_owner_id", unique: true
   end
 
   create_table "identities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -123,7 +124,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_26_141632) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conversations", "users", column: "creator_id"
   add_foreign_key "conversations", "users", column: "sponsor_id"
-  add_foreign_key "embeddings", "users"
   add_foreign_key "identities", "users"
   add_foreign_key "media_items", "users"
   add_foreign_key "messages", "conversations"
