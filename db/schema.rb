@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_084616) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_28_112452) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -72,10 +72,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_084616) do
   end
 
   create_table "conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "campaign_id"
     t.datetime "created_at", null: false
     t.uuid "creator_id", null: false
     t.uuid "sponsor_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["campaign_id"], name: "index_conversations_on_campaign_id"
     t.index ["creator_id", "sponsor_id"], name: "index_conversations_on_creator_id_and_sponsor_id", unique: true
     t.index ["creator_id"], name: "index_conversations_on_creator_id"
     t.index ["sponsor_id"], name: "index_conversations_on_sponsor_id"
@@ -153,6 +155,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_084616) do
   add_foreign_key "campaign_participants", "conversations"
   add_foreign_key "campaign_participants", "users", column: "creator_id"
   add_foreign_key "campaigns", "users", column: "sponsor_id"
+  add_foreign_key "conversations", "campaigns"
   add_foreign_key "conversations", "users", column: "creator_id"
   add_foreign_key "conversations", "users", column: "sponsor_id"
   add_foreign_key "identities", "users"
