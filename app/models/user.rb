@@ -4,6 +4,7 @@ class User < ApplicationRecord
     has_many :sessions, through: :identities
     has_one :embedding, as: :owner, dependent: :destroy
     has_many :media_items, dependent: :destroy
+    has_many :campaigns, foreign_key: :sponsor_id, dependent: :destroy
     after_commit :generate_description_embedding, on: :create, if: :creator?
 
     validates :username, :email, presence: true, uniqueness: true
@@ -13,6 +14,6 @@ class User < ApplicationRecord
     private 
 
     def generate_description_embedding
-        GenerateEmbeddingJob.perform_later(self.id)
+        GenerateEmbeddingJob.perform_later(self.id, 'User')
     end
 end

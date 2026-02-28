@@ -1,19 +1,27 @@
 class GenerateEmbeddingJob < ApplicationJob
     queue_as :default
 
-    def perform(user_id)
-        user = User.find_by(id: user_id)
-
-        if (!user.description.present?) 
+    def perform(owner_id, owner_type)
+        if (owner_type != 'User' && owner_type != 'Campaign')
             return 
         end
 
-        vector = EmbeddingService.generate(user.description)
+        owner = (owner_type == 'User' ? User.find_by(id: owner_id) : Campaign.find_by(id: owner_id))
+        
+        if ((owner_type == 'User' && !owner.description.present?) || (owner_type == 'Campaign' && !owner.brief.present?)) 
+            return 
+        end
+
+        text = (owner_type == 'User' ? owner.description : owner.brief)
+
+        vector = EmbeddingService.generate(text)
 
         Embedding.upsert({
-            user_id: user_id,
+            owner_id: owner_id,
+            owner_type: owner_type
             description_embedding: vector, 
             updated_at: Time.current
-        }, unique_by: :user_id)
+        }, unique_by: [:owner_type, :owner_id])
+        
     end
 end
