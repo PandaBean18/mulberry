@@ -43,7 +43,7 @@ class SessionsController < ApplicationController
 
 			session.update!(refresh_token_digest: BCrypt::Password.create(new_refresh_token), access_token_identifier: jti)
 
-			render json: {access_token: new_access_token, refresh_token: new_refresh_token}
+			render json: {access_token: new_access_token, refresh_token: new_refresh_token, user: user.as_json(only: [:id, :username, :role, :description, :timezone, :email])}
 		else 
 			render json: {error: "Invalid refresh token"}, status: :unauthorized
 		end

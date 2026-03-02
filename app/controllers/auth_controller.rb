@@ -21,6 +21,7 @@ class AuthController < ApplicationController
         identity = Identity.find_by(provider: 'password', uid: user_params[:email])
 
         if BCrypt::Password.new(identity&.password_digest) == params[:password]
+            @user = identity.user;
             render_session_tokens(identity)
         else
             render json: { error: 'Invalid email or password' }, status: :unauthorized
@@ -66,7 +67,7 @@ class AuthController < ApplicationController
         render json: {
             access_token: access_token,
             refresh_token: raw_refresh,
-            user: identity.user.as_json(only: [:id, :username, :role])
+            user: identity.user.as_json(only: [:id, :username, :role, :description, :timezone, :email])
         }, status: status
     end
 
