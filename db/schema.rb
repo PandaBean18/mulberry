@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_28_152333) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_03_102022) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -117,11 +117,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_152333) do
   create_table "media_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "cloudinary_public_id", null: false
     t.datetime "created_at", null: false
+    t.string "label", default: "portfolio", null: false
     t.integer "media_type", default: 0
     t.jsonb "metadata", default: {}
     t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
     t.index ["cloudinary_public_id"], name: "index_media_items_on_cloudinary_public_id", unique: true
+    t.index ["label"], name: "index_media_items_on_label"
     t.index ["user_id"], name: "index_media_items_on_user_id"
   end
 

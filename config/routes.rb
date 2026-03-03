@@ -49,4 +49,10 @@ Rails.application.routes.draw do
       patch :reject
     end
   end
+
+  resources :users do
+    collection do
+      get :me
+    end
+  end
 end
