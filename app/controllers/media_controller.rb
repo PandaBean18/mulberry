@@ -29,13 +29,13 @@ class MediaController < AuthenticatedController
 		media_item = @current_user.media_items.create!(
 			cloudinary_public_id: params[:public_id],
 			media_type: params[:resource_type] == "video" ? :video : :image,
-			metadata: params[:metadata] # dimensions, format, etc.
+			metadata: params[:metadata], # dimensions, format, etc.
 			label: params[:label]
 		)
 
 		render json: {
 			message: "Media saved to profile",
-			item: media_item.as_json(methods: [:thumbnail_url])
+			item: media_item.as_json(methods: [:thumbnail_url, :url])
 		}, status: :created
 	end
 end

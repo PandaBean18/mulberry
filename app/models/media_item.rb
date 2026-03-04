@@ -5,7 +5,7 @@ class MediaItem < ActiveRecord::Base
     LABELS = %w[avatar portfolio chat deliverable_proof].freeze
 
     validates :cloudinary_public_id, presence: true, uniqueness: true
-    validates :labels, inclusion: { in: LABELS }
+    validates :label, inclusion: { in: LABELS }
 
     scope :avatars, -> { where(label: 'avatar') }
     scope :portfolios, -> { where(label: 'portfolio') }
