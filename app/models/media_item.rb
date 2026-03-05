@@ -14,16 +14,20 @@ class MediaItem < ActiveRecord::Base
     before_create :cleanup_old_avatar, if: :is_avatar?
 
     def thumbnail_url
+        res_type = (media_type == 1 || media_type == "video") ? "video" : "image"
         Cloudinary::Utils.cloudinary_url(
           cloudinary_public_id,
+          resource_type: res_type,
           transformation: [
-              { width: 300, height: 300, crop: "fill", quality: "auto", fetch_format: "auto" }
+              { width: 300, height: 300, crop: "fill", quality: "auto", fetch_format: "jpg" }
           ]
         )
     end
 
     def url 
-        Cloudinary::Utils.cloudinary_url(cloudinary_public_id);
+        res_type = (media_type == 1 || media_type == "video") ? "video" : "image"
+
+        Cloudinary::Utils.cloudinary_url(cloudinary_public_id, resource_type: res_type);
     end
 
     private 

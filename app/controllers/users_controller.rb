@@ -7,7 +7,7 @@ class UsersController < AuthenticatedController
         render json: {
             user: user_data, 
             avatar: profile_media.find { |m| m.label == 'avatar' }&.as_json(methods: :url),
-            portfolio: profile_media.select { |m| m.label == 'portfolio' }.as_json(methods: :url)
+            portfolio: profile_media.select { |m| m.label == 'portfolio' }.as_json(methods: [:url, :thumbnail_url])
         }
     end
 end
