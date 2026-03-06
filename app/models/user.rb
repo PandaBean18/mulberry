@@ -8,8 +8,8 @@ class User < ApplicationRecord
     has_many :campaign_participants, foreign_key: :creator_id, dependent: :destroy # this returns all the entries
                                                                                    # in campaign_participants table 
                                                                                    # where the creator id is user id
-
     has_many :participating_campaigns, through: :campaign_participants, source: :campaign
+    has_many :deliverables, through: :campaign_participants
     after_commit :generate_description_embedding, on: :create, if: :creator?
 
     validates :username, :email, presence: true, uniqueness: true
