@@ -52,5 +52,6 @@ Rails.application.routes.draw do
 
   scope :users do 
     get 'me', to: 'users#me'
+    get 'deliverables', to: 'users#deliverables'
   end
 end

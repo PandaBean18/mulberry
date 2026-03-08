@@ -12,14 +12,16 @@ class UsersController < AuthenticatedController
     end
 
     def deliverables
-        d = @current_user.deliverables.includes(campaign_participants: :campaign)
+        d = @current_user.deliverables.includes(campaign_participant: :campaign)
         
-        render json: deliverables.as_json(
+        render json: d.as_json(
             include: {
                 campaign_participant: {
-                    include: campaign: { only: [:id, :title] }
+                    only: [:id],
+                    include: {
+                        campaign: { only: [:id, :title, :brief] }
+                    }
                 }
-                only: [:id]
             }
         )
     end
