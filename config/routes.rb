@@ -42,7 +42,8 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :deliverables, only: [:create] do
+  resources :deliverables, only: [:create, :show] do
+
     member do
       patch :submit
       patch :approve

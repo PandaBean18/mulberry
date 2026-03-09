@@ -15,6 +15,17 @@ class DeliverablesController < AuthenticatedController
         end
     end
 
+    def show
+        @deliverable = Deliverable.find(params[:id]) 
+
+        if (@current_user.id == @deliverable.campaign_participant.creator_id || @current_user.id == @deliverable.campaign_participant.campaign.sponsor_id) 
+            return render json: @deliverable
+        else 
+            return render json: { error: "Not authorized" }, status: :unauthorized
+        end
+        
+    end
+
     def submit
         if @current_user.id != @deliverable.campaign_participant.creator_id 
             return render json: { error: "Not authorized" }, status: :unauthorized
