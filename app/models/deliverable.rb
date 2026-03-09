@@ -8,6 +8,7 @@ class Deliverable < ApplicationRecord
     validates :status, inclusion: { in: STATUSES }
 
     validates :submission_proof_url, format: { with: URI::DEFAULT_PARSER.make_regexp, message: "must be a valid URL" }, allow_blank: true
+    validates :due_date, presence: true
     scope :needs_review, -> { where(status: 'submitted') }
     scope :approved, -> { where(status: 'approved') }
 
