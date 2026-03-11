@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_08_040822) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_11_064708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -91,10 +91,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_040822) do
     t.datetime "due_date", null: false
     t.string "feedback"
     t.string "status", default: "pending", null: false
-    t.string "submission_proof_url"
+    t.uuid "submission_proof_id"
     t.datetime "updated_at", null: false
     t.index ["campaign_participant_id"], name: "index_deliverables_on_campaign_participant_id"
     t.index ["due_date"], name: "index_deliverables_on_due_date"
+    t.index ["submission_proof_id"], name: "index_deliverables_on_submission_proof_id"
   end
 
   create_table "embeddings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -175,6 +176,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_08_040822) do
   add_foreign_key "conversations", "users", column: "creator_id"
   add_foreign_key "conversations", "users", column: "sponsor_id"
   add_foreign_key "deliverables", "campaign_participants"
+  add_foreign_key "deliverables", "media_items", column: "submission_proof_id"
   add_foreign_key "identities", "users"
   add_foreign_key "media_items", "users"
   add_foreign_key "messages", "conversations"
