@@ -12,7 +12,7 @@ class UsersController < AuthenticatedController
     end
 
     def deliverables
-        d = @current_user.deliverables.includes(campaign_participant: :campaign)
+        d = @current_user.deliverables.includes(:submission_proof, campaign_participant: :campaign)
         
         render json: d.as_json(
             include: {
@@ -21,7 +21,11 @@ class UsersController < AuthenticatedController
                     include: {
                         campaign: { only: [:id, :title, :brief] }
                     }
-                }
+                },
+                submission_proof: {
+                    only: [:id, :cloudinary_public_id, :media_type],
+                    methods: [:url, :thumbnail_url]
+                },
             }
         )
     end
