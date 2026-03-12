@@ -11,8 +11,8 @@ class Deliverable < ApplicationRecord
     scope :needs_review, -> { where(status: 'submitted') }
     scope :approved, -> { where(status: 'approved') }
 
-    def submit!(url)
-        update!(submission_proof_url: url, status: 'submitted', updated_at: Time.current)
+    def submit!(id)
+        update!(submission_proof_id: id, status: 'submitted', updated_at: Time.current)
     end
 
     def approve!

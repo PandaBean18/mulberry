@@ -31,7 +31,7 @@ class DeliverablesController < AuthenticatedController
             return render json: { error: "Not authorized" }, status: :unauthorized
         end
 
-        if @deliverable.submit!(params[:submission_proof_url])
+        if @deliverable.submit!(params[:submission_proof_id])
             render json: @deliverable
         else 
             render json: @deliverable.errors, status: :unprocessable_entity
