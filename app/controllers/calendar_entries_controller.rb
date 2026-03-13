@@ -35,7 +35,7 @@ class CalendarEntriesController < AuthenticatedController
                 title = "Reupload #{@deliverable.deliverable_type.titleize}"
             end
 
-            brief = "For #{@deliverable.title}"
+            brief = "For #{@deliverable.campaign_participant.campaign.title}"
 
             @calendar_entry = CalendarEntry.new(
                     brief: brief, 
