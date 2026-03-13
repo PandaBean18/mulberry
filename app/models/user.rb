@@ -10,6 +10,7 @@ class User < ApplicationRecord
                                                                                    # where the creator id is user id
     has_many :participating_campaigns, through: :campaign_participants, source: :campaign
     has_many :deliverables, through: :campaign_participants
+    has_many :calendar_entries, dependent: :destroy
     after_commit :generate_description_embedding, on: :create, if: :creator?
 
     validates :username, :email, presence: true, uniqueness: true

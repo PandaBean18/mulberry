@@ -1,6 +1,7 @@
 class Deliverable < ApplicationRecord
     belongs_to :campaign_participant
     belongs_to :submission_proof, class_name: 'MediaItem', optional: true
+    has_one :calendar_entry, dependent: :nullify
     
     TYPES = %w[story post reel video].freeze
     STATUSES = %w[pending submitted rejected approved].freeze

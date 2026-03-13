@@ -55,4 +55,6 @@ Rails.application.routes.draw do
     get 'me', to: 'users#me'
     get 'deliverables', to: 'users#deliverables'
   end
+
+  resources :calendar_entries, only: [:create, :index]
 end

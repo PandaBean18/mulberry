@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_11_064708) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_12_173504) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -42,6 +42,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_064708) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "calendar_entries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "brief"
+    t.datetime "created_at", null: false
+    t.datetime "date", null: false
+    t.uuid "deliverable_id"
+    t.string "entry_type", null: false
+    t.boolean "is_completed", default: false, null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["date"], name: "index_calendar_entries_on_date"
+    t.index ["deliverable_id"], name: "index_calendar_entries_on_deliverable_id"
+    t.index ["is_completed"], name: "index_calendar_entries_on_is_completed"
+    t.index ["user_id"], name: "index_calendar_entries_on_user_id"
   end
 
   create_table "campaign_participants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -168,6 +184,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_11_064708) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "calendar_entries", "deliverables"
+  add_foreign_key "calendar_entries", "users"
   add_foreign_key "campaign_participants", "campaigns"
   add_foreign_key "campaign_participants", "conversations"
   add_foreign_key "campaign_participants", "users", column: "creator_id"
