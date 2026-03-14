@@ -26,6 +26,9 @@ class UsersController < AuthenticatedController
                     only: [:id, :cloudinary_public_id, :media_type],
                     methods: [:url, :thumbnail_url]
                 },
+                calendar_entry: {
+                    only: [:id, :date]
+                }
             }
         )
     end

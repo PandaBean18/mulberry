@@ -19,7 +19,23 @@ class DeliverablesController < AuthenticatedController
         @deliverable = Deliverable.find(params[:id]) 
 
         if (@current_user.id == @deliverable.campaign_participant.creator_id || @current_user.id == @deliverable.campaign_participant.campaign.sponsor_id) 
-            return render json: @deliverable
+            return render json: @deliverable.as_json(
+                include: {
+                    campaign_participant: {
+                        only: [:id],
+                        include: {
+                            campaign: { only: [:id, :title, :brief] }
+                        }
+                    },
+                    submission_proof: {
+                        only: [:id, :cloudinary_public_id, :media_type],
+                        methods: [:url, :thumbnail_url]
+                    },
+                    calendar_entry: {
+                        only: [:id, :date]
+                    }
+                }
+            )
         else 
             return render json: { error: "Not authorized" }, status: :unauthorized
         end
