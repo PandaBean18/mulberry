@@ -56,5 +56,10 @@ Rails.application.routes.draw do
     get 'deliverables', to: 'users#deliverables'
   end
 
-  resources :calendar_entries, only: [:create, :index]
+  resources :calendar_entries, only: [:create, :index] do 
+    member do 
+      patch :complete
+      patch :undo_complete
+    end
+  end
 end

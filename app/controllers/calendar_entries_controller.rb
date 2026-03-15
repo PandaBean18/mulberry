@@ -63,6 +63,30 @@ class CalendarEntriesController < AuthenticatedController
         end
     end
 
+    def complete
+        @calendar_entry = CalendarEntry.find(params[:id])
+
+        if (@calendar_entry.user.id != @current_user.id) 
+            return render json: { error: "Invalid calendar ID" }, status: :forbidden
+        end
+
+        @calendar_entry.complete
+
+        return render json: { message: 'Updated calendar entry' }, status: :ok
+    end
+
+    def undo_complete
+        @calendar_entry = CalendarEntry.find(params[:id])
+
+        if (@calendar_entry.user.id != @current_user.id) 
+            return render json: { error: "Invalid calendar ID" }, status: :forbidden
+        end
+
+        @calendar_entry.undo_complete
+
+        return render json: { message: 'Updated calendar entry' }, status: :ok
+    end
+
     private 
 
     def calendar_entry_params
