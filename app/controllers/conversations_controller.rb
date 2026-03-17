@@ -16,4 +16,16 @@ class ConversationsController < AuthenticatedController
 
         return render json: @conversation, status: :ok
     end
+
+    def index 
+        @conversations = Conversation.where(creator_id: @current_user.id).includes(:campaign).order(updated_at: :desc)
+
+        render json: @conversations.as_json(
+            include: {
+                campaign: { only: [:id, :title] }
+            }, 
+            latest_message: { only: [:body, :created_at, :sender_id] }
+        )
+
+    end
 end
