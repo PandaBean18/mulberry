@@ -41,7 +41,7 @@ class SessionsController < ApplicationController
 			new_access_token = JWT.encode(payload, Rails.application.credentials.secret_key_base, 'HS256')
 			new_refresh_token = SecureRandom.hex(32)
 
-			session.update!(refresh_token_digest: BCrypt::Password.create(new_refresh_token), access_token_identifier: jti)
+			session.update!(refresh_token_digest: BCrypt::Password.create(new_refresh_token), access_token_identifier: jti, expires_at: 2.weeks.from_now)
 
 			render json: {access_token: new_access_token, refresh_token: new_refresh_token, user: user.as_json(only: [:id, :username, :role, :description, :timezone, :email])}
 		else 

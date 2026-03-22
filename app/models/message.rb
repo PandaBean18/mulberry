@@ -5,6 +5,10 @@ class Message < ApplicationRecord
     
     after_create_commit { broadcast_message }
 
+    def sender_label(current_user_id)
+        sender_id == current_user_id ? "creator" : "sponsor"
+    end
+
     private
 
     def broadcast_message
