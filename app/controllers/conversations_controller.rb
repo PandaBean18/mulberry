@@ -34,9 +34,36 @@ class ConversationsController < AuthenticatedController
                     created_at: msg.created_at,
                     read_at: msg.read_at,
                     sender_id: msg.sender_id,
-                    sender: msg.sender_id == @current_user.id ? "creator" : "sponsor"
+                    sender_label: msg.sender_id == @current_user.id ? "creator" : "sponsor"
                 } : nil
             }
         }
+    end
+
+    def show
+        @conversation = Conversation.find_by(id: params[:id])
+
+        if @conversation.nil? || (@conversation.creator_id != @current_user.id && @conversation.sponsor_id)
+            return render json: { error: "Conversation not found or access denied" }, status: :not_found
+        end
+
+        @conversation.messages.where.not(sender_id: @current_user.id).where(read_at: nil).update_all(read_at: Time.current)
+        @messages = @conversation.messages.order(created_at: :asc)
+        render json: {
+            id: @conversation.id,
+            campaign: @conversation.campaign&.as_json(only: [:id, :title]),
+            creator_id: @conversation.creator_id,
+            sponsor_id: @conversation.sponsor_id,
+            messages: @messages.map { |msg|
+                {
+                    id: msg.id,
+                    body: msg.body,
+                    sender_id: msg.sender_id,
+                    sender_label: msg.sender_label(@current_user.id),
+                    created_at: msg.created_at,
+                    read_at: msg.read_at
+                }
+            }
+        }, status: :ok
     end
 end

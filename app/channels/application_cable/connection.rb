@@ -12,8 +12,8 @@ module ApplicationCable
 			token = request.params[:token]
 			current_user = nil
 
-			if (token == nil)
-				return render json: {error: 'Missing Token'}, status: :unauthorized
+			if token.blank?
+				reject_unauthorized_connection
 			end
 
 			begin
@@ -23,14 +23,11 @@ module ApplicationCable
 				current_user = User.find_by(id: payload['sub'])
 
 				if (current_user == nil)
-					puts 1
 					reject_unauthorized_connection
 				end
 			rescue JWT::ExpiredSignature 
-				puts 2
 				reject_unauthorized_connection
 			rescue JWT::DecodeError
-				puts 3
 				reject_unauthorized_connection
 			end 
 

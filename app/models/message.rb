@@ -19,7 +19,8 @@ class Message < ApplicationRecord
                 body: body,
                 sender_id: sender_id,
                 created_at: created_at,
-                username: sender.email
+                username: sender.email,
+                sender_label: sender.id == current_user.id ? "creator" : "sponsor"
             }
         )    
     end
