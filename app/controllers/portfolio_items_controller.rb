@@ -13,6 +13,9 @@ class PortfolioItemsController < AuthenticatedController
             
             external_thumbnail_url: params[:thumbnail_url], # yt
             external_embed_url: params[:media_url], # yt
+
+            media_item_id: params[:media_item_id], # direct media upload
+            thumbnail_item_id: params[:thumbnail_item_id], # direct media upload
             
             temporary_assets: source_type == "instagram" ? {
                 thumbnail_url: params[:temporary_thumbnail_url],

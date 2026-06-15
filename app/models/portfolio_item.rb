@@ -22,6 +22,13 @@ class PortfolioItem < ApplicationRecord
             external_thumbnail_url
         elsif thumbnail_item.present?
             cloudinary_image_url(thumbnail_item.cloudinary_public_id)
+        elsif media_item.present? && media_item.video?
+            Cloudinary::Utils.cloudinary_url(
+                media_item.cloudinary_public_id,
+                resource_type: :video,
+                format: :jpg,
+                transformation: [{ start_offset: "0.0", height: 720, crop: "limit" }]
+            )
         else
             nil
         end
