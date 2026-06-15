@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_22_091852) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_14_143911) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -158,6 +158,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_091852) do
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
+  create_table "portfolio_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "external_embed_url"
+    t.string "external_thumbnail_url"
+    t.string "external_url"
+    t.boolean "is_collaborative", default: false, null: false
+    t.uuid "media_item_id"
+    t.jsonb "metrics", default: {}, null: false
+    t.string "source_type", default: "direct_upload"
+    t.integer "status", default: 0, null: false
+    t.jsonb "temporary_assets", default: {}, null: false
+    t.uuid "thumbnail_item_id"
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["media_item_id"], name: "index_portfolio_items_on_media_item_id", unique: true
+    t.index ["metrics"], name: "index_portfolio_items_on_metrics", using: :gin
+    t.index ["status"], name: "index_portfolio_items_on_status"
+    t.index ["thumbnail_item_id"], name: "index_portfolio_items_on_thumbnail_item_id"
+    t.index ["user_id"], name: "index_portfolio_items_on_user_id"
+  end
+
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "access_token_identifier", null: false
     t.datetime "created_at", null: false
@@ -199,5 +222,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_091852) do
   add_foreign_key "media_items", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "portfolio_items", "media_items"
+  add_foreign_key "portfolio_items", "media_items", column: "thumbnail_item_id"
+  add_foreign_key "portfolio_items", "users"
   add_foreign_key "sessions", "identities"
 end

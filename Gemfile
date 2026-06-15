@@ -8,6 +8,9 @@ gem "pgvector"
 gem "neighbor"
 gem "informers"
 gem "cloudinary"
+gem 'open-uri'
+gem 'nokogiri'
+gem 'json'
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
@@ -52,4 +55,8 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+end
+
+group :development, :test do
+  gem 'dotenv-rails'
 end

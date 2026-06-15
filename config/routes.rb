@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     get 'me', to: 'users#me'
     get 'deliverables', to: 'users#deliverables'
   end
+  get 'users/:id', to: 'users#show'
 
   resources :calendar_entries, only: [:create, :index] do 
     member do 
@@ -62,4 +63,7 @@ Rails.application.routes.draw do
       patch :undo_complete
     end
   end
+
+  post 'media/parse_link', to: 'media#parse_link'
+  resources :portfolio_items, only: [:create] # add index and destroy as well
 end

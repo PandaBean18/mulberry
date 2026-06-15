@@ -101,6 +101,9 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     dotenv (3.2.0)
+    dotenv-rails (3.2.0)
+      dotenv (= 3.2.0)
+      railties (>= 6.1)
     drb (2.2.3)
     ed25519 (1.4.0)
     erb (6.0.1)
@@ -212,6 +215,10 @@ GEM
       ffi
     onnxruntime (0.10.1-x86_64-linux)
       ffi
+    open-uri (0.5.0)
+      stringio
+      time
+      uri
     ostruct (0.6.3)
     parallel (1.27.0)
     parser (3.3.10.1)
@@ -348,6 +355,8 @@ GEM
     thruster (0.1.18)
     thruster (0.1.18-aarch64-linux)
     thruster (0.1.18-x86_64-linux)
+    time (0.4.2)
+      date
     timeout (0.6.0)
     tokenizers (0.6.3)
       rb_sys
@@ -386,11 +395,15 @@ DEPENDENCIES
   bundler-audit
   cloudinary
   debug
+  dotenv-rails
   image_processing (~> 1.2)
   informers
+  json
   jwt
   kamal
   neighbor
+  nokogiri
+  open-uri
   pg (~> 1.1)
   pgvector
   puma (>= 5.0)
