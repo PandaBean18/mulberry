@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_14_143911) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_15_115143) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -123,6 +123,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_14_143911) do
     t.index ["owner_type", "owner_id"], name: "index_embeddings_on_owner_type_and_owner_id", unique: true
   end
 
+  create_table "ideas", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.jsonb "description", default: {}, null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["user_id"], name: "index_ideas_on_user_id"
+  end
+
   create_table "identities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "password_digest"
@@ -132,6 +141,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_14_143911) do
     t.uuid "user_id", null: false
     t.index ["provider", "uid"], name: "index_identities_on_provider_and_uid", unique: true
     t.index ["user_id"], name: "index_identities_on_user_id"
+  end
+
+  create_table "inspos", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "external_thumbnail_url"
+    t.string "external_url"
+    t.uuid "idea_id", null: false
+    t.string "source_type", default: "direct_upload", null: false
+    t.integer "status", default: 0, null: false
+    t.jsonb "temporary_assets", default: {}, null: false
+    t.uuid "thumbnail_item_id"
+    t.datetime "updated_at", null: false
+    t.index ["idea_id"], name: "index_inspos_on_idea_id"
+    t.index ["thumbnail_item_id"], name: "index_inspos_on_thumbnail_item_id"
   end
 
   create_table "media_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -218,7 +241,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_14_143911) do
   add_foreign_key "conversations", "users", column: "sponsor_id"
   add_foreign_key "deliverables", "campaign_participants"
   add_foreign_key "deliverables", "media_items", column: "submission_proof_id"
+  add_foreign_key "ideas", "users"
   add_foreign_key "identities", "users"
+  add_foreign_key "inspos", "ideas"
+  add_foreign_key "inspos", "media_items", column: "thumbnail_item_id"
   add_foreign_key "media_items", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"

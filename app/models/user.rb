@@ -13,6 +13,7 @@ class User < ApplicationRecord
     has_many :calendar_entries, dependent: :destroy
     has_many :portfolio_items, dependent: :destroy
     has_many :portfolio_media, through: :portfolio_items, source: :media_item
+    has_many :ideas, dependent: :destroy
     after_commit :generate_description_embedding, on: :create, if: :creator?
 
     validates :username, :email, presence: true, uniqueness: true

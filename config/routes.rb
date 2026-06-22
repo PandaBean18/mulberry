@@ -66,4 +66,5 @@ Rails.application.routes.draw do
 
   post 'media/parse_link', to: 'media#parse_link'
   resources :portfolio_items, only: [:create] # add index and destroy as well
+  resources :ideas, only: [:index, :show, :create, :update, :destroy]
 end
